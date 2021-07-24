@@ -2,11 +2,10 @@
   <div>
     <ul class="answer__options">
       <answer-item 
-      v-for="answer in answers" 
-      v-bind:a="answer" 
-      v-bind:key="answer.id"
-      @picked="test"
-
+      v-for="item in answerOptions" 
+      v-bind:answer="item" 
+      v-bind:key="item.id"
+      @picked="$emit('picked', item)"
       />
 
     </ul>
@@ -14,19 +13,20 @@
 </template>
 
 <script>
+
 import AnswerItem from "./AnswerItem";
 export default {
   props: {
-    answers: {
+    answerOptions: {
       type: Array,
       required: true,
     },
   },
   components: { AnswerItem },
   methods: {
-      test(e) {
-          console.log(e)
-      }
+    //   tmp(e) {
+    //       console.log(e)
+    //   }
   },
 };
 </script>

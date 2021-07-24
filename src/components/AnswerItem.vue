@@ -1,18 +1,24 @@
 <template>
     <li>
         <label><input name="answer" type="radio"
-        @change.checked="$emit('picked', $event.target.value)"
-        >{{ a }}</label>
+        @change="$emit('picked', answer)"
+        :checked="checked"
+        >{{ answer.text }}</label>
     </li>
 </template>
 
 <script>
     export default {
         props: {
-            a: {
-                type: Text,
+            answer: {
+                type: Object,
                 requared: true,
             },
+        },
+        data() {
+            return {
+                checked: false,
+            }
         },
     }
 </script>

@@ -8,7 +8,7 @@
     export default {
         props: {
             question: {
-                type: Text,
+                type: String,
                 required: true,
             },
         },

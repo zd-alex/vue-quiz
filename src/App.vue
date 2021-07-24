@@ -8,9 +8,7 @@
     <h1>Психологический тест</h1>
     <hr />
     <question :question="getQuestion" />
-    <answer-list v-bind:answers="getAnswerOptions" 
-    @picked="gotMessage"
-    />
+    <answer-list v-bind:answerOptions="getAnswerOptions" @picked="gotMessage" />
     <div class="btns">
       <my-button @click="prevQ" :disabled="forbiddenPrev"> Назад</my-button>
       <my-button @click="nextQ" :disabled="forbiddenNext"> Далее</my-button>
@@ -40,60 +38,71 @@ export default {
           qtype: 1,
           questionText: "Работа в команде или в одиночестве?",
           completed: false,
-          answerOptions: ["В команде", "В одиночестве"],
+          answerOptions: [
+            { id: 1, text: "В команде" },
+            { id: 2, text: "В одиночестве" },
+          ],
         },
         {
           id: 2,
           qtype: 1,
           questionText: "Теория или практика?",
           completed: false,
-          answerOptions: ["Теория", "Практика"],
-        },
-        {
-          id: 3,
-          qtype: 1,
-          questionText:
-            "Телефонный звонок или электронные письма (текстовые сообщения)?",
-          completed: false,
           answerOptions: [
-            "Телефонный звонок",
-            "Электронные письма (текстовые сообщения)",
+            { id: 1, text: "Теория" },
+            { id: 2, text: "Практика" },
           ],
         },
+        // {
+        //   id: 3,
+        //   qtype: 1,
+        //   questionText:
+        //     "Телефонный звонок или электронные письма (текстовые сообщения)?",
+        //   completed: false,
+        //   answerOptions: [
+        //     { id: 1, text: "Телефонный звонок" },
+        //     { id: 1, text: "Электронные письма (текстовые сообщения)" },
+        //   ],
+        // },
         {
           id: 4,
           qtype: 1,
           questionText: "Утро или ночь?",
           completed: false,
-          answerOptions: ["Утро", "Ночь"],
+          answerOptions: [{id: 1, text: "Утро"}, {id: 1, text: "Ночь"}],
         },
         {
           id: 5,
           qtype: 1,
           questionText: "Пляж или горы?",
           completed: false,
-          answerOptions: ["Пляж", "Горы"],
+          answerOptions: [{id: 1, text: "Пляж"}, {id: 1, text: "Горы"}],
         },
-        {
-          id: 6,
-          qtype: 1,
-          questionText: "Вечеринка в клубе или дома?",
-          completed: false,
-          answerOptions: ["Вечеринка в клубе", "Дома"],
-        },
+        // {
+        //   id: 6,
+        //   qtype: 1,
+        //   questionText: "Вечеринка в клубе или дома?",
+        //   completed: false,
+        //   answerOptions: ["Вечеринка в клубе", "Дома"],
+        // },
       ],
 
-      userAnswers: [],
-      curAnswer: '',
+      // userAnswers: [],
+      // curAnswer: {},
     };
   },
   methods: {
-    gotMessage(str) {
-      console.log('i have got a message ', str)
+    gotMessage(obj) {
+      // console.log('i have got a message ', obj)
+      // this.curAnswer = obj
+      this.questionsList[this.curInxQst].answer = obj;
     },
     nextQ() {
+      // let curQuestion = this.questionsList[(this.curInxQst)]
+      // curQuestion.answer = this.curAnswer
+      // this.userAnswers.push(curQuestion.answer)
+
       if (this.curInxQst < this.questionsList.length - 1) {
-        this.userAnswers.push({id: this.questionsList[this.curInxQst], yourAnswer: this.curAnswer})
         this.curInxQst += 1;
       }
     },
