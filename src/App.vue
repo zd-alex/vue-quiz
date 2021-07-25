@@ -7,11 +7,19 @@
     <!-- <router-view/> -->
     <h1>Психологический тест</h1>
     <hr />
-    <question :question="getQuestion" />
-    <answer-list v-bind:answerOptions="getAnswerOptions" @picked="gotMessage" />
-    <div class="btns">
-      <my-button @click="prevQ" :disabled="forbiddenPrev"> Назад</my-button>
-      <my-button @click="nextQ" :disabled="forbiddenNext"> Далее</my-button>
+    <div v-show="!isCompleted">
+      <question :question="getQuestion" />
+      <answer-list
+        v-bind:answerOptions="getAnswerOptions"
+        @picked="gotMessage"
+      />
+      <div class="btns">
+        <my-button @click="prevQ" :disabled="forbiddenPrev"> Назад</my-button>
+        <my-button @click="nextQ"> {{ buttonText }}</my-button>
+      </div>
+    </div>
+    <div v-show="isCompleted">
+      <test-result :result="randomResult()" @init="initially = true" />
     </div>
   </div>
 </template>
@@ -20,18 +28,23 @@
 import Question from "@/components/Question";
 import AnswerList from "@/components/AnswerList";
 import MyButton from "@/components/UI/MyButton";
+import TestResult from "@/components/TestResult.vue";
 
 export default {
   components: {
     Question,
     AnswerList,
     MyButton,
+    TestResult,
   },
   data() {
     return {
       curInxQst: 0,
       forbiddenPrev: true,
       forbiddenNext: false,
+      buttonText: "Далее",
+      isCompleted: false,
+      initially: false,
       questionsList: [
         {
           id: 1,
@@ -69,21 +82,50 @@ export default {
           qtype: 1,
           questionText: "Утро или ночь?",
           completed: false,
-          answerOptions: [{id: 1, text: "Утро"}, {id: 1, text: "Ночь"}],
+          answerOptions: [
+            { id: 1, text: "Утро" },
+            { id: 1, text: "Ночь" },
+          ],
         },
         {
           id: 5,
           qtype: 1,
           questionText: "Пляж или горы?",
           completed: false,
-          answerOptions: [{id: 1, text: "Пляж"}, {id: 1, text: "Горы"}],
+          answerOptions: [
+            { id: 1, text: "Пляж" },
+            { id: 1, text: "Горы" },
+          ],
         },
         {
           id: 6,
           qtype: 1,
           questionText: "Вечеринка в клубе или дома?",
           completed: false,
-          answerOptions: [{id: 1, text: "Вечеринка в клубе"}, {id: 2, text: "Дома"}],
+          answerOptions: [
+            { id: 1, text: "Вечеринка в клубе" },
+            { id: 2, text: "Дома" },
+          ],
+        },
+      ],
+      quizResult: [
+        {
+          id: 1,
+          text:
+            "Вы экстраверт, который любит общество других людей и веселую жизнь. В повседневной жизни вы активны и очень энергичны. Что касается профессиональной жизни, то вы предприимчивы и ориентированы на результат. А так же вы без труда заводите новые знакомства и находите общие темы для разговора.",
+        },
+        {
+          id: 2,
+          text:
+            "Вы интроверт предпочитаете спокойствие, тишину и одиночество. Вас можно назвать уравновешенной натурой, любите жить моментом и сосредотачиваться на чем-то одном. Что касается профессиональной сферы, то вы более дальновидны и у вас творческий подход к работе.",
+        },
+        {
+          id: 3,
+          text: "Вы бездельник! Займитесь делом!",
+        },
+        {
+          id: 4,
+          text: "Вы идиот! Что тут поделаешь :)",
         },
       ],
 
@@ -98,18 +140,27 @@ export default {
       this.questionsList[this.curInxQst].answer = obj;
     },
     nextQ() {
-      // let curQuestion = this.questionsList[(this.curInxQst)]
-      // curQuestion.answer = this.curAnswer
-      // this.userAnswers.push(curQuestion.answer)
-
-      if (this.curInxQst < this.questionsList.length - 1) {
+      if (this.buttonText === "Завершить") {
+        this.isCompleted = true;
+        console.log("тест пройден");
+      } else if (this.curInxQst < this.questionsList.length - 2) {
         this.curInxQst += 1;
+      } else if (this.curInxQst === this.questionsList.length - 2) {
+        this.curInxQst += 1;
+        this.buttonText = "Завершить";
       }
     },
     prevQ() {
       if (this.curInxQst > 0) {
         this.curInxQst -= 1;
+        this.buttonText = "Далее";
       }
+    },
+    randomResult() {
+      let max = this.quizResult.length;
+      let res = this.quizResult[Math.floor(Math.random() * max)];
+      console.log(res);
+      return res;
     },
   },
   computed: {
@@ -130,6 +181,19 @@ export default {
       if (newValue === this.questionsList.length - 1) {
         this.forbiddenNext = true;
       } else this.forbiddenNext = false;
+    },
+    initially() {
+      if (this.initially) {
+        this.buttonText = "Далее";
+        this.curInxQst = 0;
+        this.isCompleted = false;
+        this.initially = false;
+        for (let i = 0; i < this.questionsList.length; i++) {
+          this.questionsList[i].answer = {};
+        }
+        
+        console.log("clear");
+      }
     },
   },
 };

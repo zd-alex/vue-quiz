@@ -15,6 +15,7 @@ button {
   color: #ffffff;
   padding: 5px 10px;
   font-size: 20px;
+  width: 130px;
 }
 
 button:hover {
