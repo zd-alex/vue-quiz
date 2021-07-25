@@ -78,13 +78,13 @@ export default {
           completed: false,
           answerOptions: [{id: 1, text: "Пляж"}, {id: 1, text: "Горы"}],
         },
-        // {
-        //   id: 6,
-        //   qtype: 1,
-        //   questionText: "Вечеринка в клубе или дома?",
-        //   completed: false,
-        //   answerOptions: ["Вечеринка в клубе", "Дома"],
-        // },
+        {
+          id: 6,
+          qtype: 1,
+          questionText: "Вечеринка в клубе или дома?",
+          completed: false,
+          answerOptions: [{id: 1, text: "Вечеринка в клубе"}, {id: 2, text: "Дома"}],
+        },
       ],
 
       // userAnswers: [],
