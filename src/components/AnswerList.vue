@@ -1,19 +1,19 @@
 <template>
   <div>
     <ul class="answer__options">
-      <answer-item 
-      v-for="item in answerOptions" 
-      v-bind:answer="item" 
-      v-bind:key="item.id"
-      @picked="$emit('picked', item)"
+      <answer-item
+        v-for="item in answerOptions"
+        v-bind:answer="item"
+        v-bind:key="item.id"
+        v-bind:selected="selected.id"
+        v-bind:typeQ="typeQ"
+        @picked="$emit('picked', item)"
       />
-
     </ul>
   </div>
 </template>
 
 <script>
-
 import AnswerItem from "./AnswerItem";
 export default {
   props: {
@@ -21,6 +21,13 @@ export default {
       type: Array,
       required: true,
     },
+    selected: {
+      type: Object,
+    },
+    typeQ: {
+        type:Number,
+        required: true,
+    }
   },
   components: { AnswerItem },
   methods: {
@@ -33,8 +40,8 @@ export default {
 
 <style scoped>
 .answer__options {
-    list-style: none;
-    text-align: left;
-    /* height: 100px; */
+  list-style: none;
+  text-align: left;
+  /* height: 100px; */
 }
 </style>

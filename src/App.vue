@@ -11,6 +11,8 @@
       <question :question="getQuestion" />
       <answer-list
         v-bind:answerOptions="getAnswerOptions"
+        v-bind:selected="getSelectedAnswer"
+        v-bind:typeQ="getQuestionType"
         @picked="gotMessage"
       />
       <div class="btns">
@@ -50,6 +52,7 @@ export default {
           id: 1,
           qtype: 1,
           questionText: "Работа в команде или в одиночестве?",
+          answer: {},
           completed: false,
           answerOptions: [
             { id: 1, text: "В команде" },
@@ -58,12 +61,14 @@ export default {
         },
         {
           id: 2,
-          qtype: 1,
+          qtype: 2,
           questionText: "Теория или практика?",
+          answer: {},
           completed: false,
           answerOptions: [
             { id: 1, text: "Теория" },
             { id: 2, text: "Практика" },
+            { id: 3, text: "Все вместе" },
           ],
         },
         // {
@@ -81,6 +86,7 @@ export default {
           id: 4,
           qtype: 1,
           questionText: "Утро или ночь?",
+          answer: {},
           completed: false,
           answerOptions: [
             { id: 1, text: "Утро" },
@@ -91,6 +97,7 @@ export default {
           id: 5,
           qtype: 1,
           questionText: "Пляж или горы?",
+          answer: {},
           completed: false,
           answerOptions: [
             { id: 1, text: "Пляж" },
@@ -101,6 +108,7 @@ export default {
           id: 6,
           qtype: 1,
           questionText: "Вечеринка в клубе или дома?",
+          answer: {},
           completed: false,
           answerOptions: [
             { id: 1, text: "Вечеринка в клубе" },
@@ -170,6 +178,13 @@ export default {
     getAnswerOptions() {
       return this.questionsList[this.curInxQst].answerOptions;
     },
+    getSelectedAnswer() {
+      return this.questionsList[this.curInxQst].answer;
+    },
+    getQuestionType() {
+      console.log(this.questionsList[this.curInxQst].qtype)
+      return this.questionsList[this.curInxQst].qtype;
+    }
   },
   watch: {
     curInxQst(newValue) {
