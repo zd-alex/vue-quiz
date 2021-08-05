@@ -1,57 +1,57 @@
 <template>
   <li>
-    <label v-if="typeQ === 1"
-      ><input
-        name="answer"
-        type="radio"
-        :value="answer.id"
-        @change="$emit('picked', answer)"
-        v-model="selected"
-      />{{ answer.text }}</label
-    >
-    <label v-else
-      ><input
-        name="answer"
-        type="checkbox"
-        :value="answer.id"
-        @change="$emit('picked', answer)"
-        v-model="selected"
-      />{{ answer.text }}</label
-    >
+    <label>
+      <input name='group'
+        :type="qType"
+        :value="idx"
+        v-model="checked"
+              
+        @change='updateInput'
+      />{{ text }}
+    </label>
   </li>
 </template>
 
 <script>
+//:qCurrent='qCurrent'  
 export default {
   props: {
-    answer: {
-      type: Object,
+    modelValue: [String, Number],
+    text: {
+      type: String,
       requared: true,
     },
-    selected: {
-      type: Number,
-    },
-    typeQ: {
-      type: Number,
+    qType: {
+      type: String,
       required: true,
     },
+    selected: {
+      type: Boolean,
+      default: false,
+    },
+    idx: {
+      type: Number,
+    },
+    qCurrent: Number
   },
   data() {
     return {
-      checked: false,
+      checked: this.selected
     };
   },
   methods: {
-    checkState() {
-      console.log(selected.id);
-      if (selected.id === anwser.id) return true;
-      else return false;
+    updateInput(e) {
+      
+      let key = e.target.value
+      let value = e.target.checked
+      console.log(key, value);
+      this.$emit('picked', [key,value])
     },
   },
   watch: {
-    // selected() {
-    //      console.log(selected)
-    // }
+      qCurrent(newValue, oldValue) {
+          this.checked = this.selected
+      }
   },
 };
 </script>

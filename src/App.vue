@@ -7,20 +7,21 @@
     <!-- <router-view/> -->
     <h1>Психологический тест</h1>
     <hr />
-    <div v-show="!isCompleted">
-      <question :question="getQuestion" />
+    <div v-if="!isCompleted">
+      <question :question="getQuestion" :qNumber="curInxQst" />
       <answer-list
-        v-bind:answerOptions="getAnswerOptions"
-        v-bind:selected="getSelectedAnswer"
-        v-bind:typeQ="getQuestionType"
-        @picked="gotMessage"
+        :answerOptions="getAnswerOptions"
+        :qType="getQuestionType"
+        :checkedAnswers="curAnswer"
+        :qCurrent="curInxQst"
+        @picked="handleChange"
       />
       <div class="btns">
         <my-button @click="prevQ" :disabled="forbiddenPrev"> Назад</my-button>
         <my-button @click="nextQ"> {{ buttonText }}</my-button>
       </div>
     </div>
-    <div v-show="isCompleted">
+    <div v-if="isCompleted">
       <test-result :result="randomResult()" @init="initially = true" />
     </div>
   </div>
@@ -50,70 +51,43 @@ export default {
       questionsList: [
         {
           id: 1,
-          qtype: 1,
+          qtype: "checkbox",
           questionText: "Работа в команде или в одиночестве?",
-          answer: {},
-          completed: false,
-          answerOptions: [
-            { id: 1, text: "В команде" },
-            { id: 2, text: "В одиночестве" },
-          ],
+          answerOptions: ["В команде", "В одиночестве"],
         },
         {
           id: 2,
-          qtype: 2,
+          qtype: "checkbox",
           questionText: "Теория или практика?",
-          answer: {},
-          completed: false,
+          answerOptions: ["Теория", "Практика", "Все вместе"],
+        },
+        {
+          id: 3,
+          qtype: "checkbox",
+          questionText:
+            "Телефонный звонок или электронные письма (текстовые сообщения)?",
           answerOptions: [
-            { id: 1, text: "Теория" },
-            { id: 2, text: "Практика" },
-            { id: 3, text: "Все вместе" },
+            "Телефонный звонок",
+            "Электронные письма (текстовые сообщения)",
           ],
         },
-        // {
-        //   id: 3,
-        //   qtype: 1,
-        //   questionText:
-        //     "Телефонный звонок или электронные письма (текстовые сообщения)?",
-        //   completed: false,
-        //   answerOptions: [
-        //     { id: 1, text: "Телефонный звонок" },
-        //     { id: 1, text: "Электронные письма (текстовые сообщения)" },
-        //   ],
-        // },
         {
           id: 4,
-          qtype: 1,
+          qtype: "radio",
           questionText: "Утро или ночь?",
-          answer: {},
-          completed: false,
-          answerOptions: [
-            { id: 1, text: "Утро" },
-            { id: 1, text: "Ночь" },
-          ],
+          answerOptions: ["Утро", "Ночь"],
         },
         {
           id: 5,
-          qtype: 1,
+          qtype: "radio",
           questionText: "Пляж или горы?",
-          answer: {},
-          completed: false,
-          answerOptions: [
-            { id: 1, text: "Пляж" },
-            { id: 1, text: "Горы" },
-          ],
+          answerOptions: ["Пляж", "Горы"],
         },
         {
           id: 6,
-          qtype: 1,
+          qtype: "radio",
           questionText: "Вечеринка в клубе или дома?",
-          answer: {},
-          completed: false,
-          answerOptions: [
-            { id: 1, text: "Вечеринка в клубе" },
-            { id: 2, text: "Дома" },
-          ],
+          answerOptions: ["Вечеринка в клубе", "Дома"],
         },
       ],
       quizResult: [
@@ -136,17 +110,11 @@ export default {
           text: "Вы идиот! Что тут поделаешь :)",
         },
       ],
-
-      // userAnswers: [],
-      // curAnswer: {},
+      userAnswers: [],
+      userAnswer: [],
     };
   },
   methods: {
-    gotMessage(obj) {
-      // console.log('i have got a message ', obj)
-      // this.curAnswer = obj
-      this.questionsList[this.curInxQst].answer = obj;
-    },
     nextQ() {
       if (this.buttonText === "Завершить") {
         this.isCompleted = true;
@@ -170,6 +138,18 @@ export default {
       console.log(res);
       return res;
     },
+    handleChange(obj) {
+      let index = obj[0];
+      let checked = obj[1];
+      if (checked) {
+        if (!this.userAnswer.includes(index))
+          this.userAnswer.push(index);
+      } else {
+        this.userAnswer = this.userAnswer.filter((x) => x !== index);
+      }
+      if (this.questionsList[this.curInxQst].qtype==='radio') this.userAnswer = [index]
+      this.userAnswers[this.curInxQst] = this.userAnswer.slice();
+    },
   },
   computed: {
     getQuestion() {
@@ -178,16 +158,22 @@ export default {
     getAnswerOptions() {
       return this.questionsList[this.curInxQst].answerOptions;
     },
-    getSelectedAnswer() {
-      return this.questionsList[this.curInxQst].answer;
-    },
+    // getSelectedAnswer() {
+    //   return this.questionsList[this.curInxQst].answer;
+    // },
     getQuestionType() {
-      console.log(this.questionsList[this.curInxQst].qtype)
+      console.log(this.questionsList[this.curInxQst].qtype);
       return this.questionsList[this.curInxQst].qtype;
-    }
+    },
+    curAnswer() {
+      if (this.userAnswers[this.curInxQst]) {
+        return this.userAnswers[this.curInxQst];
+      } else 
+      return [];
+    },
   },
   watch: {
-    curInxQst(newValue) {
+    curInxQst(newValue, oldValue) {
       // console.log(newValue);
       if (newValue === 0) {
         this.forbiddenPrev = true;
@@ -196,6 +182,11 @@ export default {
       if (newValue === this.questionsList.length - 1) {
         this.forbiddenNext = true;
       } else this.forbiddenNext = false;
+
+      if (newValue < oldValue) {
+        this.userAnswer = this.userAnswers[newValue]
+      }
+      else {this.userAnswer = []}      
     },
     initially() {
       if (this.initially) {
@@ -206,7 +197,7 @@ export default {
         for (let i = 0; i < this.questionsList.length; i++) {
           this.questionsList[i].answer = {};
         }
-        
+
         console.log("clear");
       }
     },

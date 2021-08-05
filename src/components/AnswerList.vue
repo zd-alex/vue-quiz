@@ -2,12 +2,16 @@
   <div>
     <ul class="answer__options">
       <answer-item
-        v-for="item in answerOptions"
-        v-bind:answer="item"
-        v-bind:key="item.id"
-        v-bind:selected="selected.id"
-        v-bind:typeQ="typeQ"
-        @picked="$emit('picked', item)"
+        v-for="(item, index) in answerOptions"
+        :selected="tmp(index)"
+        :text="item"
+        :key="index"
+        :value="index"
+        :qType="qType"
+        :idx="index"
+        :qCurrent="qCurrent"
+        
+        @picked="handleChange"
       />
     </ul>
   </div>
@@ -21,20 +25,36 @@ export default {
       type: Array,
       required: true,
     },
-    selected: {
-      type: Object,
+    qType: {
+      type: String,
+      required: true,
     },
-    typeQ: {
-        type:Number,
-        required: true,
-    }
+    qCurrent: Number,
+    checkedAnswers: {
+      //выбранные ответы на вопрос
+      type: Array,
+      required: true
+    },
   },
+
   components: { AnswerItem },
   methods: {
-    //   tmp(e) {
-    //       console.log(e)
-    //   }
+      tmp(index) {
+              for(let i=0; i< this.checkedAnswers.length; i++)
+                console.log('checked', this.checkedAnswers[i])
+
+          if (this.checkedAnswers.length) {
+
+            return this.checkedAnswers.includes(index.toString())
+          } else return false
+      },
+
+    handleChange(obj) {
+      console.log("answerList: ", obj);
+      this.$emit('picked', obj)
+    },
   },
+
 };
 </script>
 
