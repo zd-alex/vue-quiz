@@ -13,10 +13,11 @@
 </template>
 
 <script>
-//:qCurrent='qCurrent'  
+//:qCurrent='qCurrent'
+        // :value="idx"  
 export default {
   props: {
-    modelValue: [String, Number],
+    // modelValue: [String, Number],
     text: {
       type: String,
       requared: true,

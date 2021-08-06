@@ -51,7 +51,7 @@ export default {
       questionsList: [
         {
           id: 1,
-          qtype: "checkbox",
+          qtype: "radio",
           questionText: "Работа в команде или в одиночестве?",
           answerOptions: ["В команде", "В одиночестве"],
         },
@@ -141,7 +141,7 @@ export default {
     handleChange(obj) {
       let index = obj[0];
       let checked = obj[1];
-      if (checked) {
+      if (checked && this.questionsList[this.curInxQst].qtype!=='radio') {
         if (!this.userAnswer.includes(index))
           this.userAnswer.push(index);
       } else {

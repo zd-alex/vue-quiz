@@ -40,8 +40,8 @@ export default {
   components: { AnswerItem },
   methods: {
       tmp(index) {
-              for(let i=0; i< this.checkedAnswers.length; i++)
-                console.log('checked', this.checkedAnswers[i])
+            //   for(let i=0; i< this.checkedAnswers.length; i++)
+            //     console.log('checked', this.checkedAnswers[i])
 
           if (this.checkedAnswers.length) {
 
@@ -60,7 +60,7 @@ export default {
 
 <style scoped>
 .answer__options {
-  list-style: none;
+  /* list-style: none; */
   text-align: left;
   /* height: 100px; */
 }
