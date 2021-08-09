@@ -5,6 +5,7 @@
         :type="qType"
         :value="idx"
         v-model="checked"
+        :checked="checked"
               
         @change='updateInput'
       />{{ text }}
@@ -13,8 +14,7 @@
 </template>
 
 <script>
-//:qCurrent='qCurrent'
-        // :value="idx"  
+
 export default {
   props: {
     // modelValue: [String, Number],
@@ -45,7 +45,7 @@ export default {
       
       let key = e.target.value
       let value = e.target.checked
-      console.log(key, value);
+      console.log(e, key, value);
       this.$emit('picked', [key,value])
     },
   },

@@ -18,7 +18,9 @@
       />
       <div class="btns">
         <my-button @click="prevQ" :disabled="forbiddenPrev"> Назад</my-button>
-        <my-button @click="nextQ"> {{ buttonText }}</my-button>
+        <my-button @click="nextQ" :disabled="forbiddenNext">
+          {{ buttonText }}</my-button
+        >
       </div>
     </div>
     <div v-if="isCompleted">
@@ -44,7 +46,7 @@ export default {
     return {
       curInxQst: 0,
       forbiddenPrev: true,
-      forbiddenNext: false,
+      forbiddenNext: true,
       buttonText: "Далее",
       isCompleted: false,
       initially: false,
@@ -53,7 +55,7 @@ export default {
           id: 1,
           qtype: "radio",
           questionText: "Работа в команде или в одиночестве?",
-          answerOptions: ["В команде", "В одиночестве"],
+          answerOptions: ["В команде", "В одиночестве", "Никак"],
         },
         {
           id: 2,
@@ -141,14 +143,26 @@ export default {
     handleChange(obj) {
       let index = obj[0];
       let checked = obj[1];
-      if (checked && this.questionsList[this.curInxQst].qtype!=='radio') {
-        if (!this.userAnswer.includes(index))
-          this.userAnswer.push(index);
-      } else {
-        this.userAnswer = this.userAnswer.filter((x) => x !== index);
-      }
-      if (this.questionsList[this.curInxQst].qtype==='radio') this.userAnswer = [index]
+
+      if (this.questionsList[this.curInxQst].qtype !== "radio") {
+        if (checked) {
+          if (!this.userAnswer.includes(index)) this.userAnswer.push(index);
+        } else {
+          this.userAnswer = this.userAnswer.filter((x) => x !== index);
+        }
+      } else this.userAnswer = [index];
       this.userAnswers[this.curInxQst] = this.userAnswer.slice();
+
+      // if (this.userAnswer.length === 0) {
+      //   this.forbiddenNext = true;
+      // } else this.forbiddenNext = false;
+      this.canOpenNextPage()
+    },
+    canOpenNextPage() {
+      console.log('can or not?')
+      if (this.userAnswer.length === 0) {
+        this.forbiddenNext = true;
+      } else this.forbiddenNext = false;
     },
   },
   computed: {
@@ -168,8 +182,9 @@ export default {
     curAnswer() {
       if (this.userAnswers[this.curInxQst]) {
         return this.userAnswers[this.curInxQst];
-      } else 
-      return [];
+      } else {
+        return [];
+      }
     },
   },
   watch: {
@@ -179,29 +194,44 @@ export default {
         this.forbiddenPrev = true;
       } else this.forbiddenPrev = false;
 
-      if (newValue === this.questionsList.length - 1) {
-        this.forbiddenNext = true;
-      } else this.forbiddenNext = false;
+      // if (this.userAnswer.length === 0) {
+      //   this.forbiddenNext = true;
+      // } else this.forbiddenNext = false;
+      
 
-      if (newValue < oldValue) {
-        this.userAnswer = this.userAnswers[newValue]
+      if (this.userAnswers[newValue] !== undefined) {
+        this.userAnswer = this.userAnswers[newValue];
+      } else {
+        this.userAnswer = [];
       }
-      else {this.userAnswer = []}      
+      this.canOpenNextPage()
     },
+    // userAnswer() {
+    //   if (this.userAnswer.length === 0) {
+    //     this.forbiddenNext = true;
+    //   } else this.forbiddenNext = false;
+    // },
     initially() {
       if (this.initially) {
         this.buttonText = "Далее";
         this.curInxQst = 0;
         this.isCompleted = false;
         this.initially = false;
-        for (let i = 0; i < this.questionsList.length; i++) {
-          this.questionsList[i].answer = {};
-        }
+        this.userAnswers = [];
+        this.userAnswer = [];
+        // for (let i = 0; i < this.questionsList.length; i++) {
+        //   this.questionsList[i].answer = {};
+        // }
 
         console.log("clear");
       }
     },
   },
+  // created () {
+  //   this.list.forEach((val) => {
+  //     this.$watch(() => val, this.canNextPage, {deep: true});
+  //   });
+  // },
 };
 </script>
 

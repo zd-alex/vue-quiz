@@ -3,6 +3,7 @@
     <ul class="answer__options">
       <answer-item
         v-for="(item, index) in answerOptions"
+        
         :selected="tmp(index)"
         :text="item"
         :key="index"
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+// 
 import AnswerItem from "./AnswerItem";
 export default {
   props: {
@@ -35,6 +37,11 @@ export default {
       type: Array,
       required: true
     },
+    // data() {
+    //     return {
+    //         modelData: []
+    //     }
+    // },
   },
 
   components: { AnswerItem },
@@ -44,7 +51,6 @@ export default {
             //     console.log('checked', this.checkedAnswers[i])
 
           if (this.checkedAnswers.length) {
-
             return this.checkedAnswers.includes(index.toString())
           } else return false
       },
@@ -60,7 +66,7 @@ export default {
 
 <style scoped>
 .answer__options {
-  /* list-style: none; */
+  list-style: none;
   text-align: left;
   /* height: 100px; */
 }
