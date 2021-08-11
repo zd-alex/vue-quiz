@@ -91,6 +91,12 @@ export default {
           questionText: "Вечеринка в клубе или дома?",
           answerOptions: ["Вечеринка в клубе", "Дома"],
         },
+        {
+          id: 7,
+          qtype: "radio",
+          questionText: "Спонтанность или планирование?",
+          answerOptions: ["Спонтанность", "Планирование"],
+        },
       ],
       quizResult: [
         {
@@ -156,10 +162,10 @@ export default {
       // if (this.userAnswer.length === 0) {
       //   this.forbiddenNext = true;
       // } else this.forbiddenNext = false;
-      this.canOpenNextPage()
+      this.canOpenNextPage();
     },
     canOpenNextPage() {
-      console.log('can or not?')
+      console.log("can or not?");
       if (this.userAnswer.length === 0) {
         this.forbiddenNext = true;
       } else this.forbiddenNext = false;
@@ -197,14 +203,13 @@ export default {
       // if (this.userAnswer.length === 0) {
       //   this.forbiddenNext = true;
       // } else this.forbiddenNext = false;
-      
 
       if (this.userAnswers[newValue] !== undefined) {
         this.userAnswer = this.userAnswers[newValue];
       } else {
         this.userAnswer = [];
       }
-      this.canOpenNextPage()
+      this.canOpenNextPage();
     },
     // userAnswer() {
     //   if (this.userAnswer.length === 0) {
